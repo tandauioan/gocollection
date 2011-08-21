@@ -1,5 +1,5 @@
 
-package gocollection
+package golists
 
 import collection "gocollection"
 

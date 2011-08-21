@@ -5,18 +5,16 @@ AR=gopack
 
 mkdir lib
 
+
 echo "collection.go"
-6g -o lib/collection.6 src/gocollection/collection.go
-echo "Add to archive"
-gopack gr lib/gocollection.a lib/collection.6
+6g -o lib/gocollection.6 src/gocollection/gocollection.go
 
-echo "sllist.go"
-6g -I lib -o lib/sllist.6 src/gocollection/sllist.go
+6g -I lib  -o lib/golists.6 src/gocollection/golists/*.go
 
-echo "dllist.go"
-6g -I lib -o lib/dllist.6 src/gocollection/dllist.go
 
-echo "Add to archive"
-gopack gr lib/gocollection.a lib/sllist.6 lib/dllist.6
+mkdir lib/test
 
+echo "Test1"
+6g -I lib -o lib/test/p1.6 test/p1.go
+6l -L lib -o lib/test/p1 lib/test/p1.6
 
