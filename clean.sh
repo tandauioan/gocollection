@@ -1,3 +1,0 @@
-
-rm -rfv lib
-

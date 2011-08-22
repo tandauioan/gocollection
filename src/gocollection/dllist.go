@@ -1,11 +1,10 @@
-package golists
+package gocollection
 
-import "gocollection"
 
 type DLList struct {
-	gocollection.Collection
-	gocollection.Stack
-	gocollection.Deque
+	Collection
+	Stack
+	Deque
 
 	head, tail *element_DLList
 	size int
@@ -17,15 +16,15 @@ type element_DLList struct {
 }
 
 
-type forward_Iterator struct {
-	gocollection.Iterator
+type dllist_forward_Iterator struct {
+	Iterator
 
 	list *DLList
 	node *element_DLList
 }
 
-type backward_Iterator struct {
-	gocollection.Iterator
+type dllist_backward_Iterator struct {
+	Iterator
 
 	list *DLList
 	node *element_DLList
@@ -45,21 +44,21 @@ func NewDLList() *DLList {
 	return list
 }
 
-func getForwardIterator(list *DLList) gocollection.Iterator {
-	it:=new(forward_Iterator)
+func getForwardIterator(list *DLList) Iterator {
+	it:=new(dllist_forward_Iterator)
 	it.list=list
 	it.node=list.head
 	return it
 }
 
-func getBackwardIterator(list *DLList) gocollection.Iterator {
-	it:=new(backward_Iterator)
+func getBackwardIterator(list *DLList) Iterator {
+	it:=new(dllist_backward_Iterator)
 	it.list=list
 	it.node=list.tail
 	return it
 }
 
-func (self *forward_Iterator) Next() (value interface{}, valid bool) {
+func (self *dllist_forward_Iterator) Next() (value interface{}, valid bool) {
 	self.node=self.node.next
 	if self.node==self.list.tail {
 		value=nil
@@ -71,14 +70,14 @@ func (self *forward_Iterator) Next() (value interface{}, valid bool) {
 	return
 }
 
-func (self *forward_Iterator) Remove() {
+func (self *dllist_forward_Iterator) Remove() {
 	self.node.prev.next=self.node.next
 	self.node.next.prev=self.node.prev
 	self.node=self.node.prev
 	self.list.size--
 }
 
-func (self *backward_Iterator) Next() (value interface{}, valid bool) {
+func (self *dllist_backward_Iterator) Next() (value interface{}, valid bool) {
 	self.node=self.node.prev
 	if self.node==self.list.head {
 		value=nil
@@ -90,18 +89,18 @@ func (self *backward_Iterator) Next() (value interface{}, valid bool) {
 	return
 }
 
-func (self *backward_Iterator) Remove() {
+func (self *dllist_backward_Iterator) Remove() {
 	self.node.prev.next=self.node.next
 	self.node.next.prev=self.node.prev
 	self.node=self.node.next
 	self.list.size--
 }
 
-func (self *DLList) Iterator() gocollection.Iterator {
+func (self *DLList) Iterator() Iterator {
 	return getForwardIterator(self)
 }
 
-func (self *DLList) ReverseIterator() gocollection.Iterator {
+func (self *DLList) ReverseIterator() Iterator {
 	return getBackwardIterator(self)
 }
 
@@ -115,7 +114,7 @@ func (self *DLList) Add(object interface{})bool {
 	return true
 }
 
-func (self *DLList) AddAll(c gocollection.Collection) bool {
+func (self *DLList) AddAll(c Collection) bool {
 	it:=c.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -130,7 +129,7 @@ func (self *DLList) AddAll(c gocollection.Collection) bool {
 	return true
 }
 
-func (self *DLList) Contains(object interface{}, equal gocollection.Equal) bool {
+func (self *DLList) Contains(object interface{}, equal Equal) bool {
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -145,7 +144,7 @@ func (self *DLList) Contains(object interface{}, equal gocollection.Equal) bool 
 	return false
 }
 
-func (self *DLList) ContainsAll(c gocollection.Collection, equal gocollection.Equal) bool {
+func (self *DLList) ContainsAll(c Collection, equal Equal) bool {
 	it:=c.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -170,7 +169,7 @@ func (self *DLList) IsEmpty() bool {
 	return self.size==0
 }
 
-func (self *DLList) Remove(object interface{}, equal gocollection.Equal) {
+func (self *DLList) Remove(object interface{}, equal Equal) {
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -184,7 +183,7 @@ func (self *DLList) Remove(object interface{}, equal gocollection.Equal) {
 	}
 }
 
-func (self *DLList) RemoveAll(c gocollection.Collection, equal gocollection.Equal) {
+func (self *DLList) RemoveAll(c Collection, equal Equal) {
 	it:=c.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -196,7 +195,7 @@ func (self *DLList) RemoveAll(c gocollection.Collection, equal gocollection.Equa
 	}
 }
 
-func (self *DLList) RetainAll(c gocollection.Collection, equal gocollection.Equal) {
+func (self *DLList) RetainAll(c Collection, equal Equal) {
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -241,7 +240,7 @@ func (self *DLList) Push(element interface{}) bool {
 	return self.add_first(element)
 }
 
-func (self *DLList) Search(element interface{}, equal gocollection.Equal) int {
+func (self *DLList) Search(element interface{}, equal Equal) int {
 	it:=self.Iterator()
 	pos:=0
 	for {

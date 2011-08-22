@@ -1,26 +1,24 @@
 
-package golists
-
-import collection "gocollection"
+package gocollection
 
 type SLList struct { 
-	collection.Collection
-	collection.Stack
+	Collection
+	Stack
 
 
 	value interface{}
 	next *SLList
 }
 
-type SLListIterator struct {collection.Iterator;
+type sllist_forward_Iterator struct {Iterator;
 	prev, node *SLList
 }
 
-func (self *SLListIterator) HasNext() bool {
+func (self *sllist_forward_Iterator) HasNext() bool {
 	return self.node.next!=nil
 }
 
-func (self *SLListIterator) Next() (value interface{}, valid bool) {
+func (self *sllist_forward_Iterator) Next() (value interface{}, valid bool) {
 	if(self.node.next==nil) {
 		value=nil
 		valid=false
@@ -35,7 +33,7 @@ func (self *SLListIterator) Next() (value interface{}, valid bool) {
 	return
 }
 
-func (self *SLListIterator) Remove() {
+func (self *sllist_forward_Iterator) Remove() {
 	if self.prev!=self.node {
 		self.prev.next=self.node.next
 		self.node=self.prev
@@ -58,8 +56,8 @@ func (self *SLList) _get_last_node() (lastNode *SLList) {
 	return
 }
 
-func (self *SLList) Iterator() collection.Iterator {
-	iter:=new(SLListIterator)
+func (self *SLList) Iterator() Iterator {
+	iter:=new(sllist_forward_Iterator)
 	iter.prev=self
 	iter.node=self
 	return iter
@@ -82,7 +80,7 @@ func (self *SLList) Add(object interface{}) bool {
 	return true
 }
 
-func (self *SLList) AddAll(c collection.Collection) bool {
+func (self *SLList) AddAll(c Collection) bool {
 	lastNode:=self._get_last_node()
 	it:=c.Iterator()
 	for {
@@ -104,7 +102,7 @@ func (self *SLList) Clear() {
 	self.next=nil
 }
 
-func (self *SLList) Contains(object interface{}, equal collection.Equal) bool {
+func (self *SLList) Contains(object interface{}, equal Equal) bool {
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -119,7 +117,7 @@ func (self *SLList) Contains(object interface{}, equal collection.Equal) bool {
 	return false
 }
 
-func (self *SLList) ContainsAll(c collection.Collection, equal collection.Equal) bool {
+func (self *SLList) ContainsAll(c Collection, equal Equal) bool {
 	it:=c.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -138,7 +136,7 @@ func (self *SLList) IsEmpty() bool {
 	return self.next==nil
 }
 
-func (self *SLList) Remove(object interface{}, equal collection.Equal) {
+func (self *SLList) Remove(object interface{}, equal Equal) {
 	node:=self
 	for node.next!=nil {
 		if equal(object, node.next.value) {
@@ -149,7 +147,7 @@ func (self *SLList) Remove(object interface{}, equal collection.Equal) {
 	}
 }
 
-func (self *SLList) RemoveAll(c collection.Collection, equal collection.Equal) {
+func (self *SLList) RemoveAll(c Collection, equal Equal) {
 	it:=c.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -161,7 +159,7 @@ func (self *SLList) RemoveAll(c collection.Collection, equal collection.Equal) {
 	}
 }
 
-func (self *SLList) RetainAll(c collection.Collection, equal collection.Equal) {
+func (self *SLList) RetainAll(c Collection, equal Equal) {
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
@@ -201,7 +199,7 @@ func (self *SLList) Push(element interface{}) {
 	self.Prepend(element)
 }
 
-func (self *SLList) Search(element interface{}, equal collection.Equal) int {
+func (self *SLList) Search(element interface{}, equal Equal) int {
 	index:=0
 	result:=-1
 	it:=self.Iterator()
