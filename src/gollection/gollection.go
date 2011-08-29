@@ -19,6 +19,13 @@ package gollection
 type Equal func(o1 interface{}, o2 interface{}) bool
 
 /*
+* This is a hash function prototype. It must consistently return
+* the same value for the same object
+*/
+type Hash func(o1 interface{}) int
+
+
+/*
 * This is an iterator interface. Unless otherwise specified, 
 * there is no defined behavior if the iteration goes beyond 
 * the last element of the collection
