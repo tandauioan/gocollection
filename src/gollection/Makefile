@@ -1,8 +1,8 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=gocollection
+TARG=gollection
 GOFILES=\
-		gocollection.go\
+		gollection.go\
 		sllist.go\
 		dllist.go\
 

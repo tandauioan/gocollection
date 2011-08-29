@@ -1,4 +1,4 @@
-package gocollection
+package gollection
 
 /*
 * A doubly linked list structure. It maintains the size of the list
@@ -125,6 +125,7 @@ func (self *DLList) ReverseIterator() Iterator {
 /* Adds a new element to the tail of the list */
 func (self *DLList) Add(object interface{})bool {
 	node:=new(element_DLList)
+	node.value=object
 	node.next=self.tail
 	node.prev=self.tail.prev
 	self.tail.prev.next=node
@@ -136,15 +137,28 @@ func (self *DLList) Add(object interface{})bool {
 /* Adds all the elements of the collection at the tail of the list */
 func (self *DLList) AddAll(c Collection) bool {
 	it:=c.Iterator()
-	for {
-		value,valid:=it.Next()
-		if !valid {
-			break
-		} else {
-			if !self.Add(value) {
-				return false
-			}
+	value, valid:=it.Next()
+	if valid {
+		node:=new(element_DLList)
+		node.value=value
+		node.prev=nil
+		top:=node
+		bottom:=node
+		self.size++
+		value,valid=it.Next()
+		for {
+			node:=new(element_DLList)
+			node.value=value
+			node.prev=bottom
+			bottom.next=node
+			bottom=node
+			self.size++
+			value,valid=it.Next()
 		}
+		self.tail.prev.next=top
+		top.prev=self.tail.prev
+		bottom.next=self.tail
+		self.tail.prev=bottom
 	}
 	return true
 }
@@ -210,19 +224,22 @@ func (self *DLList) Remove(object interface{}, equal Equal) {
 
 /* Removes all the elements of the given collection from this list */
 func (self *DLList) RemoveAll(c Collection, equal Equal) {
-	it:=c.Iterator()
-	for {
-		value,valid:=it.Next()
-		if !valid {
-			break
-		} else {
-			self.Remove(value,equal)
+		if self==c {self.Clear()} else {
+		it:=c.Iterator()
+		for {
+			value,valid:=it.Next()
+			if !valid {
+				break
+			} else {
+				self.Remove(value,equal)
+			}
 		}
 	}
 }
 
 /* Removes all the elements from this list that are not in the given collection */
 func (self *DLList) RetainAll(c Collection, equal Equal) {
+	if self==c { return }
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()

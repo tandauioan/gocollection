@@ -14,7 +14,7 @@ include $(GOROOT)/src/Make.inc
 all: install
 
 DIRS=\
-	src/gocollection/\
+	src/gollection/\
 
 
 # Disable tests that windows cannot run yet.

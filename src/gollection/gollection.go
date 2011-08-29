@@ -8,7 +8,7 @@
 */
 
 
-package gocollection
+package gollection
 
 /*
 * This is an equality function prototype; a predicate that

@@ -1,5 +1,5 @@
 
-package gocollection
+package gollection
 
 /*
 * A very basic singly linked list structure that generalizes
@@ -114,21 +114,28 @@ func (self *SLList) Add(object interface{}) bool {
 */
 func (self *SLList) AddAll(c Collection) bool {
 	lastNode:=self._get_last_node()
-	it:=c.Iterator()
-	for {
-		value,valid:=it.Next()
-		if !valid {
-			break
-		} else {
+	it:=self.Iterator()
+	value, valid:=it.Next()
+	if valid {
+		node:=new(SLList)
+		node.value=value
+		node.next=nil
+		top:=node
+		bottom:=node
+		value,valid=it.Next()
+		for valid {
 			node:=new(SLList)
 			node.value=value
-			lastNode.next=node
-			lastNode=node
+			node.next=nil
+			bottom.next=node
+			bottom=node
+			value,valid=it.Next()
 		}
+		lastNode.next=top
 	}
-	lastNode.next=nil
 	return true
 }
+
 
 /* Removes all the elements from this list */
 func (self *SLList) Clear() {
@@ -196,13 +203,17 @@ func (self *SLList) Remove(object interface{}, equal Equal) {
 * Removes all the elements in the given collection from this list
 */
 func (self *SLList) RemoveAll(c Collection, equal Equal) {
-	it:=c.Iterator()
-	for {
-		value,valid:=it.Next()
-		if !valid {
-			break
-		} else {
-			self.Remove(value, equal)
+	if self==c {
+		self.Clear()
+	} else {
+		it:=c.Iterator()
+		for {
+			value,valid:=it.Next()
+			if !valid {
+				break
+			} else {
+				self.Remove(value, equal)
+			}
 		}
 	}
 }
@@ -212,6 +223,9 @@ func (self *SLList) RemoveAll(c Collection, equal Equal) {
 * in the given collection
 */
 func (self *SLList) RetainAll(c Collection, equal Equal) {
+	if self==c {
+		return
+	}
 	it:=self.Iterator()
 	for {
 		value,valid:=it.Next()
